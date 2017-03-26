@@ -24,19 +24,14 @@ class JobSpider(Spider):
                 keyword = sel2.xpath('text()').extract()[0]
                 keywords.append(keyword)
 
-        job_list_url_form = 'https://www.lagou.com/jobs/list_%s?city=%s'
+        # job_list_url = 'https://www.lagou.com/jobs/positionAjax.json?city=%E6%B7%B1%E5%9C%B3&needAddtionalResult=false'
+        job_list_url = 'https://www.lagou.com/jobs/positionAjax.json?city=深圳&needAddtionalResult=false'
         for keyword in keywords:
-            job_list_url = job_list_url_form % (keyword, DEFAULT_CITY)
-            print 'job_list_url => ' + job_list_url
-            yield Request(job_list_url, callback=self.parse_job)
+            formdata = {'first': False, 'pn': 1, 'kd': keyword}
+            yield FormRequest(job_list_url, formdata=formdata, callback=self.parse_job)
 
     def parse_job(self, response):
-        urls = response.xpath('//div[@class="item_con_list"]//a/@href').extract()
-        for url in urls:
-            if url.endswith('}}.html'):
-                pass
-            else:
-                yield Request(url, callback=self.parse_job_detail)
+        yield response
 
     def parse_job_detail(self, response):
         job = Job()
@@ -46,4 +41,15 @@ class JobSpider(Spider):
         job['company_id'] = response.xpath('//input[@id="companyid"]/@value').extract()[0].strip()
         job['company_name'] = response.xpath('//dl[@id=job_company]//h2/text()').extract()[0].strip()
         yield job
+
+
+# post 请求
+#
+# In [1]: from scrapy.http import FormRequest
+#
+# In [2]: frmdata = {"id": "com.supercell.boombeach", "reviewType": '0', "reviewSortOrder": '0', "pageNum":'0'}
+#
+# In [3]: url = "https://play.google.com/store/getreviews"
+#
+# In [4]: r = FormRequest(url, formdata=frmdata)
 
