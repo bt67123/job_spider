@@ -6,6 +6,28 @@
 # http://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
+from settings import PROXIES
+from settings import USER_AGENTS
+import random
+
+
+class RandomUserAgentMiddleware(object):
+    """
+    随机获取 UserAgent
+    """
+
+    def process_request(self, request, spider):
+        request.headers.setdefault('User-Agent', random.choice(USER_AGENTS))
+
+
+class RandomProxyMiddleware(object):
+    """
+    随机获取代理 IP
+    """
+
+    def process_request(self, request, spider):
+        proxy = random.choice(PROXIES)
+        request.meta['proxy'] = "http://%s" % proxy['ip_port']
 
 
 class JobSpiderSpiderMiddleware(object):
