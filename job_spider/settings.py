@@ -53,9 +53,9 @@ DOWNLOAD_DELAY = 3
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-    'job_spider.middlewares.RandomUserAgentMiddleware': 543,
-    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
-    'job_spider.middlewares.RandomProxyMiddleware': 100,
+    # 'job_spider.middlewares.RandomUserAgentMiddleware': 543,
+    # 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
+    # 'job_spider.middlewares.RandomProxyMiddleware': 100,
     # 'job_spider.middlewares.MyCustomDownloaderMiddleware': 543,
 }
 
@@ -94,6 +94,16 @@ ITEM_PIPELINES = {
 
 
 DEFAULT_CITY = u'深圳'
+
+MYSQL_SETTINGS = {
+    'host': '127.0.0.1',
+    'port': 3306,
+    'user': 'root',
+    'passwd': None,
+    'db': 'lagou',
+    'charset': 'utf8',
+    'table': 'jobs',
+}
 
 USER_AGENTS = [
     "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; AcooBrowser; .NET CLR 1.1.4322; .NET CLR 2.0.50727)",

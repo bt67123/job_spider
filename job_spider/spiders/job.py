@@ -8,6 +8,8 @@ from scrapy.http import FormRequest
 from cookielib import CookieJar
 import json
 import random
+import yaml
+from job_spider import textutil
 
 
 class JobSpider(Spider):
@@ -58,17 +60,26 @@ class JobSpider(Spider):
                               callback=self.parse_job)
 
     def parse_job(self, response):
-        jsonresponse = json.loads(response.body_as_unicode())
-        job = Job()
-        job['name'] =jsonresponse['content']
-        yield job
+        # jsonresponse = json.dumps(response.body_as_unicode(), ensure_ascii=False).encode('utf8')
+        # jsonresponse = yaml.safe_load(jsonresponse).encode('utf8')
+        # jsonresponse = json.loads(jsonresponse, encoding='utf8')
 
-    def parse_job_detail(self, response):
-        job = Job()
-        job['name'] = response.xpath('//div[@class="job-name"]/span[@class="name"]/text()').extract()[0]
-        job['salary'] = response.xpath('//div[@class="salary"]/text()').extract()[0].strip()
-        job['id'] = response.xpath('//input[@id="jobid"]/@value').extract()[0].strip()
-        job['company_id'] = response.xpath('//input[@id="companyid"]/@value').extract()[0].strip()
-        job['company_name'] = response.xpath('//dl[@id=job_company]//h2/text()').extract()[0].strip()
-        yield job
+        jsonresponse = json.loads(response.body_as_unicode())
+        results = jsonresponse['content']['positionResult']['result']
+        for result in results:
+            job = Job()
+            for key in Job.all_keys:
+                if key in result.keys():
+                    job[key] = result[key]
+
+            yield job
+
+    # def parse_job_detail(self, response):
+    #     job = Job()
+    #     job['name'] = response.xpath('//div[@class="job-name"]/span[@class="name"]/text()').extract()[0]
+    #     job['salary'] = response.xpath('//div[@class="salary"]/text()').extract()[0].strip()
+    #     job['id'] = response.xpath('//input[@id="jobid"]/@value').extract()[0].strip()
+    #     job['company_id'] = response.xpath('//input[@id="companyid"]/@value').extract()[0].strip()
+    #     job['company_name'] = response.xpath('//dl[@id=job_company]//h2/text()').extract()[0].strip()
+    #     yield job
 
