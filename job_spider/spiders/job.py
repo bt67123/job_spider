@@ -5,11 +5,8 @@ from scrapy.http import HtmlResponse,Request
 from job_spider.settings import *
 from job_spider.items import Job
 from scrapy.http import FormRequest
-from cookielib import CookieJar
 import json
-import random
-import yaml
-from job_spider import textutil
+import math
 
 
 class JobSpider(Spider):
@@ -60,10 +57,6 @@ class JobSpider(Spider):
                               callback=self.parse_job)
 
     def parse_job(self, response):
-        # jsonresponse = json.dumps(response.body_as_unicode(), ensure_ascii=False).encode('utf8')
-        # jsonresponse = yaml.safe_load(jsonresponse).encode('utf8')
-        # jsonresponse = json.loads(jsonresponse, encoding='utf8')
-
         jsonresponse = json.loads(response.body_as_unicode())
         results = jsonresponse['content']['positionResult']['result']
         for result in results:
@@ -74,12 +67,25 @@ class JobSpider(Spider):
 
             yield job
 
-    # def parse_job_detail(self, response):
-    #     job = Job()
-    #     job['name'] = response.xpath('//div[@class="job-name"]/span[@class="name"]/text()').extract()[0]
-    #     job['salary'] = response.xpath('//div[@class="salary"]/text()').extract()[0].strip()
-    #     job['id'] = response.xpath('//input[@id="jobid"]/@value').extract()[0].strip()
-    #     job['company_id'] = response.xpath('//input[@id="companyid"]/@value').extract()[0].strip()
-    #     job['company_name'] = response.xpath('//dl[@id=job_company]//h2/text()').extract()[0].strip()
-    #     yield job
+        # 翻页
+        pr_dict = dict(jsonresponse['content']['positionResult'])
+        total = pr_dict.get('total', 0)
+        pageSize = pr_dict.get('pageSize', 0)
+        pageNo = pr_dict.get('pageNo', 0)
+        keyword = pr_dict.get('queryAnalysisInfo').get('positionName')
+        if total > 0:
+            totalPage = math.ceil(pageSize/total)
+        else:
+            totalPage = 0
+        if totalPage > pageNo and 0 < pageNo < 30:
+            job_list_url = 'https://www.lagou.com/jobs/positionAjax.json?city=%s&needAddtionalResult=false' % DEFAULT_CITY
+            formdata = {'first': 'false', 'pn': pageNo+1, 'kd': keyword}
+            yield FormRequest(job_list_url,
+                              formdata=formdata,
+                              cookies=self.cookies,
+                              headers=self.headers,
+                              callback=self.parse_job)
+
+
+
 
