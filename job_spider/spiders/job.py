@@ -1,10 +1,10 @@
 # coding:utf-8
 
 from scrapy.spider import Spider
-from scrapy.http import HtmlResponse,Request
 from job_spider.settings import *
 from job_spider.items import Job
 from scrapy.http import FormRequest
+from job_spider import dbutils
 import json
 import math
 
@@ -68,18 +68,35 @@ class JobSpider(Spider):
             yield job
 
         # 翻页
-        pr_dict = dict(jsonresponse['content']['positionResult'])
-        total = pr_dict.get('total', 0)
-        pageSize = pr_dict.get('pageSize', 0)
-        pageNo = pr_dict.get('pageNo', 0)
-        keyword = pr_dict.get('queryAnalysisInfo').get('positionName')
+        content = jsonresponse['content']
+        pr = content['positionResult']
+        total = pr.get('totalCount', 0)
+        pageSize = content.get('pageSize', 0)
+        pageNo = content.get('pageNo', 0)
+        keyword = pr.get('queryAnalysisInfo').get('positionName')
+        print '**********************************'
+        print 'keyword = ' + str(keyword)
+        print 'total = ' + str(total)
+        print 'pageSize = ' + str(pageSize)
+        print 'pageNo = ' + str(pageNo)
+        print '**********************************'
+
+        dbutils.insert(MYSQL_SETTINGS, JOB_COUNT_TABLE, {'keyword': keyword, 'total': total})
+
         if total > 0:
-            totalPage = math.ceil(pageSize/total)
+            totalPage = math.ceil(total*1.0/pageSize)
         else:
             totalPage = 0
+
+        # print str(totalPage)
+
         if totalPage > pageNo and 0 < pageNo < 30:
             job_list_url = 'https://www.lagou.com/jobs/positionAjax.json?city=%s&needAddtionalResult=false' % DEFAULT_CITY
-            formdata = {'first': 'false', 'pn': pageNo+1, 'kd': keyword}
+            print '**********************************'
+            print 'keyword = ' + keyword
+            print 'page = ' + str(pageNo+1)
+            print '**********************************'
+            formdata = {'first': 'false', 'pn': str(pageNo+1), 'kd': keyword}
             yield FormRequest(job_list_url,
                               formdata=formdata,
                               cookies=self.cookies,

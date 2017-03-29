@@ -13,11 +13,11 @@ class Job(Item):
     all_keys = [
         'positionId', 'positionName', 'salary',
         'education', 'financeStage', 'city',
-        'companyLogo', 'distric', 'companyId',
+        'companyLogo', 'district', 'companyId',
         'industryField', 'createTime', 'positionLables',
-        'workYead', 'lastLogine', 'jobNature',
-        'companyFullName', 'companyLabelLis', 'companyShortName',
-        'companySized', 'businessZones', 'firstType',
+        'workYear', 'lastLogin', 'jobNature',
+        'companyFullName', 'companyLabelList', 'companyShortName',
+        'companySize', 'businessZones', 'firstType',
         'secondType', 'positionAdvantage', 'publisherId', 'gradeDescription'
     ]
 

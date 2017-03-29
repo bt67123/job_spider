@@ -102,8 +102,11 @@ MYSQL_SETTINGS = {
     'passwd': None,
     'db': 'lagou',
     'charset': 'utf8',
-    'table': 'jobs',
 }
+
+JOB_TABLE = 'jobs'
+
+JOB_COUNT_TABLE = 'job_counts'
 
 USER_AGENTS = [
     "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; AcooBrowser; .NET CLR 1.1.4322; .NET CLR 2.0.50727)",
