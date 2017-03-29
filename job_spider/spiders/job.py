@@ -5,6 +5,8 @@ from job_spider.settings import *
 from job_spider.items import Job
 from scrapy.http import FormRequest
 from job_spider import dbutils
+from scrapy.mail import MailSender
+from scrapy.settings import BaseSettings
 import json
 import math
 
@@ -103,6 +105,18 @@ class JobSpider(Spider):
                               headers=self.headers,
                               callback=self.parse_job)
 
+    def close(spider, reason):
+        settings = BaseSettings({
+            'MAIL_FROM': 'cnluocj@aliyun.com',
+            'MAIL_HOST': 'smtp.aliyun.com',
+            'MAIL_PORT': '25',
+            'MAIL_USER': 'cnluocj@aliyun.com',
+            'MAIL_PASS': 'Luochujian123456',
+        })
+        print 'start send email'
+        mailer = MailSender.from_settings(settings=settings)
+        mailer.send(to=["cnluocj@gmail.com"], subject="job spider end", body=reason)
+        print 'end send email'
 
 
 
