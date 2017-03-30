@@ -4,6 +4,7 @@ from scrapy.spider import Spider
 from job_spider.settings import *
 from job_spider.items import Job
 from scrapy.http import FormRequest
+from scrapy.http import Request
 from job_spider import dbutils
 from scrapy.mail import MailSender
 from scrapy.settings import BaseSettings
@@ -26,19 +27,6 @@ class JobSpider(Spider):
         'Connection': 'keep-alive',
     }
 
-    cookies = {
-        'user_trace_token': '20170326232733-7b144a277697485ba8693c95d7097ea5',
-        'LGUID': '20170326232734-bc595a50-1238-11e7-a251-525400f775ce',
-        'index_location_city': '%E6%B7%B1%E5%9C%B3',
-        'TG-TRACK-CODE': 'index_navigation',
-        'SEARCH_ID': '5951c5f55df64bbda9043fcd9ccc9a7b',
-        'Hm_lvt_4233e74dff0ae5bd0a3d81c6ccf756e6': '1490542064',
-        'Hm_lpvt_4233e74dff0ae5bd0a3d81c6ccf756e6': '1490542122',
-        '_ga': 'GA1.2.1638570626.1490542064',
-        'LGRID': '20170326232832-dee75d3d-1238-11e7-956f-5254005c3644',
-        'JSESSIONID': '1CA02935D797115D2CF33B65E763316D',
-    }
-
     def parse(self, response):
         keywords = []
         for sel in response.xpath('//div[@class="menu_sub dn"]/dl'):
@@ -54,7 +42,6 @@ class JobSpider(Spider):
             formdata = {'first': 'false', 'pn': '1', 'kd': keyword}
             yield FormRequest(job_list_url,
                               formdata=formdata,
-                              cookies=self.cookies,
                               headers=self.headers,
                               callback=self.parse_job)
 
@@ -101,7 +88,6 @@ class JobSpider(Spider):
             formdata = {'first': 'false', 'pn': str(pageNo+1), 'kd': keyword}
             yield FormRequest(job_list_url,
                               formdata=formdata,
-                              cookies=self.cookies,
                               headers=self.headers,
                               callback=self.parse_job)
 
