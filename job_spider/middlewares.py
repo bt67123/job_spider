@@ -28,6 +28,9 @@ class RandomProxyMiddleware(object):
     def process_request(self, request, spider):
         proxy = random.choice(PROXIES)
         request.meta['proxy'] = "http://%s" % proxy['ip_port']
+        print '----------------------------------'
+        print 'proxy = ' + request.meta['proxy']
+        print '----------------------------------'
 
 
 class JobSpiderSpiderMiddleware(object):

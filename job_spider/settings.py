@@ -27,7 +27,7 @@ ROBOTSTXT_OBEY = True
 # Configure a delay for requests for the same website (default: 0)
 # See http://scrapy.readthedocs.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 3
+DOWNLOAD_DELAY = 0.5
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -55,7 +55,7 @@ DOWNLOAD_DELAY = 3
 DOWNLOADER_MIDDLEWARES = {
     # 'job_spider.middlewares.RandomUserAgentMiddleware': 543,
     # 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
-    # 'job_spider.middlewares.RandomProxyMiddleware': 100,
+    'job_spider.middlewares.RandomProxyMiddleware': 100,
     # 'job_spider.middlewares.MyCustomDownloaderMiddleware': 543,
 }
 
@@ -128,19 +128,10 @@ USER_AGENTS = [
 ]
 
 PROXIES = [
-    {"ip_port": "202.121.96.33:8086"},
-    {"ip_port": "171.13.36.23:808"},
-    {"ip_port": "183.32.88.33:808"},
-    {"ip_port": "183.32.88.33:808"},
-    {"ip_port": "124.88.67.23:80"},
-    {"ip_port": "221.216.94.77:808"},
+    {"ip_port": "115.46.65.194:8123"},
+    {"ip_port": "110.72.17.9:8123"},
+    {"ip_port": "115.159.205.199:8118"},
+    {"ip_port": "49.73.82.249:8998"},
+    {"ip_port": "124.116.19.82:8998"},
+    {"ip_port": "110.73.31.72:8123"},
 ]
-
-# PROXIES = [
-#     {"ip_port": "113.108.253.195:9797"},
-#     {"ip_port": "58.59.68.91:9797"},
-#     {"ip_port": "221.237.155.64:9797"},
-#     {"ip_port": "59.44.244.14:9797"},
-#     {"ip_port": "211.103.250.145:80"},
-#     {"ip_port": "110.208.27.75:9000"},
-# ]
