@@ -10,17 +10,6 @@ from scrapy.item import Item, Field
 
 class Job(Item):
 
-    all_keys = [
-        'positionId', 'positionName', 'salary',
-        'education', 'financeStage', 'city',
-        'companyLogo', 'district', 'companyId',
-        'industryField', 'createTime', 'positionLables',
-        'workYear', 'lastLogin', 'jobNature',
-        'companyFullName', 'companyLabelList', 'companyShortName',
-        'companySize', 'businessZones', 'firstType',
-        'secondType', 'positionAdvantage', 'publisherId', 'gradeDescription'
-    ]
-
     positionId = Field()
     positionName = Field()
     salary = Field()

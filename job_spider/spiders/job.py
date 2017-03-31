@@ -50,7 +50,7 @@ class JobSpider(Spider):
         results = jsonresponse['content']['positionResult']['result']
         for result in results:
             job = Job()
-            for key in Job.all_keys:
+            for key in Job.fields.keys():
                 if key in result.keys():
                     job[key] = result[key]
 
@@ -77,7 +77,7 @@ class JobSpider(Spider):
         else:
             totalPage = 0
 
-        # print str(totalPage)
+        print 'totalPage = ' + str(totalPage)
 
         if totalPage > pageNo and 0 < pageNo < 30:
             job_list_url = 'https://www.lagou.com/jobs/positionAjax.json?city=%s&needAddtionalResult=false' % DEFAULT_CITY
