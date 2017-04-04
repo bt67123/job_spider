@@ -91,6 +91,7 @@ class JobSpider(Spider):
                               headers=self.headers,
                               callback=self.parse_job)
 
+    # TODO mail setting
     def close(spider, reason):
         settings = BaseSettings({
             'MAIL_FROM': 'cnluocj@aliyun.com',
